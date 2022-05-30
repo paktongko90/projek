@@ -1,21 +1,24 @@
 <?php
-
+    
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
+    
 use App\Models\Product;
-
+use Illuminate\Http\Request;
+    
 class ProductController extends Controller
-{
-
-     function __construct()
+{ 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function __construct()
     {
          $this->middleware('permission:product-list|product-create|product-edit|product-delete', ['only' => ['index','show']]);
          $this->middleware('permission:product-create', ['only' => ['create','store']]);
          $this->middleware('permission:product-edit', ['only' => ['edit','update']]);
          $this->middleware('permission:product-delete', ['only' => ['destroy']]);
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -27,7 +30,7 @@ class ProductController extends Controller
         return view('products.index',compact('products'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
-
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -37,7 +40,7 @@ class ProductController extends Controller
     {
         return view('products.create');
     }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -56,37 +59,37 @@ class ProductController extends Controller
         return redirect()->route('products.index')
                         ->with('success','Product created successfully.');
     }
-
+    
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Product $product)
     {
         return view('products.show',compact('product'));
     }
-
+    
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $product)
     {
         return view('products.edit',compact('product'));
     }
-
+    
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
          request()->validate([
             'name' => 'required',
@@ -98,14 +101,14 @@ class ProductController extends Controller
         return redirect()->route('products.index')
                         ->with('success','Product updated successfully');
     }
-
+    
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
         $product->delete();
     
